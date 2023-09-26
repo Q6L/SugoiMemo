@@ -146,3 +146,12 @@ nav .inner ul li a:hover {
 h1 {
     color: #000;
 }
+
+header {
+    position: relative;
+}
+.login-link {
+    position: absolute;
+    top: 10px; /* 上端からの距離を調整 */
+    right: 10px; /* 右端からの距離を調整 */
+}
