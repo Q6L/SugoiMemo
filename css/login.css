@@ -5,23 +5,16 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
-}
-
-header, footer {
-    background-color: #AAA;
-    color: #000;
-    padding: 20px;
-    text-align: center;
 }
 
 .container {
     background-color: #fff;
     border: 1px solid #ccc;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
+    align-items: center;
 }
 
 form {
