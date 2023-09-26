@@ -10,7 +10,7 @@
 </head>
     <body>
         <header>
-            <h1>Login</h1>
+            <h1>ログイン</h1>
         </header>
         <div class="container">
             <form id="loginForm">
@@ -25,10 +25,29 @@
                 <button type="submit">Login</button>
             </form>
         </div>
+        <div id="navArea">
+            <nav>
+                <div class="inner">
+                    <ul>
+                        <li class="border"></li>
+                        <li><a href="index.html">ホーム</a></li>
+                        <li><a href="memo.html">スゴイメモ</a></li>
+                        <li><a href="n_timer.html">n進数タイマー</a></li>
+                    </ul>
+                </div>
+            </nav>
+    
+            <div class="toggle-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+    
+            <div id="mask"></div>
+        </div>
         <footer>
             <p>&copy; 2023 メモアプリ</p>
         </footer>
-
         <script src="script/login.js"></script>
         <script src="script/script.js"></script>
     </body>
