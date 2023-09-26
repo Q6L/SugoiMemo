@@ -146,3 +146,16 @@ nav .inner ul li a:hover {
 h1 {
     color: #000;
 }
+
+#bottom-right-link {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: #AAA; /* リンクの背景色を設定 */
+    padding: 10px; /* リンクの内部余白を設定 */
+}
+
+#bottom-right-link a {
+    text-decoration: none; /* 下線を除去 */
+    color: #000; /* リンクテキストのカラーを設定 */
+}
