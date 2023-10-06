@@ -6,15 +6,19 @@ body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
+
 }
 
 .container {
+    margin: auto;
+    width: 500px;
     background-color: #fff;
     border: 1px solid #ccc;
     padding: 50px;
     border-radius: 10px;
     box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
     align-items: center;
+    
 }
 
 form {
@@ -31,12 +35,12 @@ h2 {
 
 label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 input[type="text"],
 input[type="password"] {
-    width: 100%;
+    width: 80%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 3px;
