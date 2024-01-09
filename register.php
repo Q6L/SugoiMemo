@@ -1,7 +1,7 @@
 <?php
 $db_host = "localhost";
 $db_user = "q6l";
-$db_password = "";
+$db_password = ""; // 本番環境では適切なパスワードを設定してください
 $db_name = "memo";
 
 $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
@@ -11,41 +11,46 @@ if (!$connection) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST["email"];
+    $id = $_POST["id"];
+    $name = $_POST["name"];
     $password = $_POST["password"];
+    $email = $_POST["email"];
 
-    $query = "SELECT * FROM users WHERE email='$email'";
-    $result = mysqli_query($connection, $query);
+    // パスワードをハッシュ化
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    if ($result) {
-        if (mysqli_num_rows($result) == 1) {
-            $row = mysqli_fetch_assoc($result);
-            $hashedPassword = $row["password"];
+    // ユーザの重複を確認
+    $checkQuery = "SELECT * FROM users WHERE email='$email'";
+    $checkResult = mysqli_query($connection, $checkQuery);
 
-            if (password_verify($password, $hashedPassword)) {
-                header("Location: index.html");
-                exit();
-            } else {
-                echo "無効なパスワードです。";
-            }
+    if ($checkResult) {
+        if (mysqli_num_rows($checkResult) > 0) {
+            echo "このメールアドレスは既に使用されています。";
         } else {
-            echo "無効なメールアドレスです。";
+            // ユーザをデータベースに挿入
+            $insertQuery = "INSERT INTO users (id, name, password, email) VALUES ('$id', '$name', '$hashedPassword', '$email')";
+            $insertResult = mysqli_query($connection, $insertQuery);
+
+            if ($insertResult) {
+                echo "アカウントが作成されました。 <a href='login.php'>ログイン</a>";
+            } else {
+                echo "アカウントの作成に失敗しました: " . mysqli_error($connection);
+            }
         }
     } else {
         echo "クエリの実行に失敗しました: " . mysqli_error($connection);
     }
 }
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/login.css">
     <link rel="stylesheet" href="css/n_timer.css">
-    <title>ログイン</title>
+    <title>アカウント作成</title>
 </head>
 <body>
     <header>
@@ -73,11 +78,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <div class="login-page">
         <div class="form">
-            <form class="login-form" method="post" action="login.php">
-                <input type="text" name="email" placeholder="メールアドレス" required/>
+            <form class="register-form" method="post" action="register.php">
+                <input type="text" name="id" placeholder="ID" required/>
+                <input type="text" name="name" placeholder="名前" required/>
                 <input type="password" name="password" placeholder="パスワード" required/>
-                <button type="submit">ログイン</button>
-                <p class="message">未登録ですか？ <a href="register.php">アカウントを作成</a></p>
+                <input type="text" name="email" placeholder="メールアドレス" required/>
+                <button type="submit">作成</button>
+                <p class="message">登録済みですか？ <a href="login.php">サインイン</a></p>
             </form>
         </div>
     </div>
