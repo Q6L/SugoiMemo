@@ -15,3 +15,32 @@ function countCharacters(textarea) {
     const characterCount = textarea.value.length;
     characterCountElement.textContent = characterCount + "文字";
 }
+
+let recognition;
+let memoInput = document.getElementById('memoInput');
+
+function startRecognition() {
+    recognition = new webkitSpeechRecognition();
+    recognition.lang = 'ja-JP';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onresult = function(event) {
+        let result = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+                result += event.results[i][0].transcript;
+            }
+        }
+        memoInput.value += result;
+    };
+
+    recognition.start();
+}
+
+function resetRecognition() {
+    if (recognition) {
+        recognition.stop();
+        recognition = null;
+    }
+}

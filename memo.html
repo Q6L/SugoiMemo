@@ -21,7 +21,7 @@
 </head>
 <body>
     <header>
-        <h1>すごいメモ</h1>
+        <h1>スゴイメモ +α</h1>
     </header>
     <div id="navArea">
         <nav>
@@ -53,39 +53,9 @@
         <button onclick="saveMemo()">.txtとして保存</button>
         <button onclick="startRecognition()">音声入力を開始</button>
         <button onclick="resetRecognition()">音声入力を終了</button>
-        <script>
-            let recognition;
-            let memoInput = document.getElementById('memoInput');
-    
-            function startRecognition() {
-                recognition = new webkitSpeechRecognition();
-                recognition.lang = 'ja-JP';
-                recognition.continuous = true;
-                recognition.interimResults = true;
-    
-                recognition.onresult = function(event) {
-                    let result = '';
-                    for (let i = event.resultIndex; i < event.results.length; i++) {
-                        if (event.results[i].isFinal) {
-                            result += event.results[i][0].transcript;
-                        }
-                    }
-                    memoInput.value += result;
-                };
-    
-                recognition.start();
-            }
-    
-            function resetRecognition() {
-                if (recognition) {
-                    recognition.stop();
-                    recognition = null;
-                }
-            }
-        </script>
     </main>
     <footer>
-        <p>&copy; 2023 メモアプリ</p>
+        <p>&copy; 2023 スゴイメモ</p>
     </footer>
     <script src="script/memo.js"></script>
     <script src="script/script.js"></script>

@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
     <footer>
-        <p>&copy; <?php echo date("Y"); ?> メモアプリ</p>
+        <p>&copy; <?php echo date("Y"); ?> スゴイメモ</p>
     </footer>
     <script src="script/script.js"></script>
 </body>
