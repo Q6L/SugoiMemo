@@ -1,9 +1,11 @@
 <?php
-$db_host = "localhost";
-$db_user = "q6l";
-$db_password = "";
-$db_name = "memo";
+session_start();
 
+// データベースへの接続
+$db_host = "localhost";
+$db_user = "memo";
+$db_password = ""; 
+$db_name = "memo";
 $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
 if (!$connection) {
@@ -11,28 +13,27 @@ if (!$connection) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST["email"];
-    $password = $_POST["password"];
+    $email = mysqli_real_escape_string($connection, $_POST["email"]);
+    $password = mysqli_real_escape_string($connection, $_POST["password"]);
 
     $query = "SELECT * FROM users WHERE email='$email'";
     $result = mysqli_query($connection, $query);
 
-    if ($result) {
-        if (mysqli_num_rows($result) == 1) {
-            $row = mysqli_fetch_assoc($result);
-            $hashedPassword = $row["password"];
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
 
-            if (password_verify($password, $hashedPassword)) {
-                header("Location: index.html");
-                exit();
-            } else {
-                echo "無効なパスワードです。";
-            }
+        // パスワードの照合
+        if (password_verify($password, $row['password'])) {
+            // ログイン成功
+            $_SESSION['user_id'] = $row['user_id'];
+            $_SESSION['user_name'] = $row['user_name'];
+            header("Location: index.php"); // ログイン後のページにリダイレクト
+            exit();
         } else {
-            echo "無効なメールアドレスです。";
+            echo "パスワードが正しくありません。";
         }
     } else {
-        echo "クエリの実行に失敗しました: " . mysqli_error($connection);
+        echo "メールアドレスが見つかりません。";
     }
 }
 ?>
@@ -52,17 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1>スゴイメモ +α</h1>
     </header>
     <div id="navArea">
-        <nav>
-            <div class="inner">
-                <ul>
-                    <li class="border"></li>
-                    <li><a href="index.html">ホーム</a></li>
-                    <li><a href="memo.html">スゴイメモ</a></li>
-                    <li><a href="n_timer.html">n進数タイマー</a></li>
-                </ul>
-            </div>
-        </nav>
-
+    <?php include './component/nav.php'; ?>
         <div class="toggle-btn">
             <span></span>
             <span></span>

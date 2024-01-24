@@ -1,9 +1,11 @@
 <?php
-$db_host = "localhost";
-$db_user = "q6l";
-$db_password = ""; // 本番環境では適切なパスワードを設定してください
-$db_name = "memo";
+session_start();
 
+// データベースへの接続
+$db_host = "localhost";
+$db_user = "memo";
+$db_password = ""; 
+$db_name = "memo";
 $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
 if (!$connection) {
@@ -11,10 +13,9 @@ if (!$connection) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = $_POST["id"];
-    $name = $_POST["name"];
-    $password = $_POST["password"];
-    $email = $_POST["email"];
+    $userName = mysqli_real_escape_string($connection, $_POST["name"]);
+    $password = mysqli_real_escape_string($connection, $_POST["password"]);
+    $email = mysqli_real_escape_string($connection, $_POST["email"]);
 
     // パスワードをハッシュ化
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -28,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "このメールアドレスは既に使用されています。";
         } else {
             // ユーザをデータベースに挿入
-            $insertQuery = "INSERT INTO users (id, name, password, email) VALUES ('$id', '$name', '$hashedPassword', '$email')";
+            $insertQuery = "INSERT INTO users (user_name, password, email) VALUES ('$userName', '$hashedPassword', '$email')";
             $insertResult = mysqli_query($connection, $insertQuery);
 
             if ($insertResult) {
@@ -42,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -61,9 +63,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="inner">
                 <ul>
                     <li class="border"></li>
-                    <li><a href="index.html">ホーム</a></li>
-                    <li><a href="memo.html">スゴイメモ</a></li>
-                    <li><a href="n_timer.html">n進数タイマー</a></li>
+                    <li><a href="index.php">ホーム</a></li>
+                    <li><a href="memo.php">スゴイメモ</a></li>
+                    <li><a href="n_timer.php">n進数タイマー</a></li>
                 </ul>
             </div>
         </nav>
@@ -79,7 +81,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login-page">
         <div class="form">
             <form class="register-form" method="post" action="register.php">
-                <input type="text" name="id" placeholder="ID" required/>
                 <input type="text" name="name" placeholder="名前" required/>
                 <input type="password" name="password" placeholder="パスワード" required/>
                 <input type="text" name="email" placeholder="メールアドレス" required/>

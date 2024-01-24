@@ -8,7 +8,22 @@ function saveMemo() {
     a.href = url;
     a.download = "memo.txt";
     a.click();
-  }
+}
+
+function saveToDatabase() {
+    var memoText = document.getElementById("memoInput").value;
+
+    // Ajaxリクエストを使用してサーバーにデータを送信
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "save_to_db.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            console.log(xhr.responseText);
+        }
+    };
+    xhr.send("memoText=" + encodeURIComponent(memoText));
+}
 
 function countCharacters(textarea) {
     const characterCountElement = document.getElementById("characterCount");

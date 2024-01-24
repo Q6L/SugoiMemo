@@ -12,16 +12,7 @@
     <h1>n進数のカウントダウンタイマー</h1>
   </header>
   <div id="navArea">
-    <nav>
-      <div class="inner">
-        <ul>
-          <li class="border"></li>
-          <li><a href="index.html">ホーム</a></li>
-          <li><a href="memo.html">スゴイメモ</a></li>
-          <li><a href="n_timer.html">n進数タイマー</a></li>
-        </ul>
-      </div>
-    </nav>
+  <?php include './component/nav.php'; ?>
     <div class="toggle-btn">
       <span></span>
       <span></span>
@@ -50,7 +41,7 @@
       </div>
       <div class="label-input-container">
         <input type="number" id="seconds-input" min="0" value="0" class="input-element">
-        <label for="seconds-input">秒　　<label>
+        <label for="seconds-input">秒　　</label>
       </div>
     </div>
     <div class="button-container">
