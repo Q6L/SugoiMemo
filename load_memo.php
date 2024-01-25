@@ -9,18 +9,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // データベースへの接続
         $db_host = "localhost";
-        $db_user = "q6l";
+        $db_user = "memo";
         $db_password = "";
-        $db_name = "SugoiMemo";
+        $db_name = "memo";
         $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
         if ($connection) {
-            $query = "SELECT memo_text FROM memos WHERE user_id = '$userId' AND memo_title = '$selectedTitle'";
+            $query = "SELECT memo_title, memo_text FROM memos WHERE user_id = '$userId' AND memo_title = '$selectedTitle'";
             $result = mysqli_query($connection, $query);
 
             if ($result) {
                 $row = mysqli_fetch_assoc($result);
-                echo $row['memo_text'];
+
+                // メモデータをJSON形式で返す
+                echo json_encode($row);
             } else {
                 echo "メモの読み込みに失敗しました";
             }

@@ -1,53 +1,68 @@
 <?php
-
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['memoText']) && !empty($_POST['memoText'])) {
-
         $memoText = $_POST['memoText'];
         $characterCount = mb_strlen($memoText);
-        $memoTitle = isset($_POST['memoTitle']) ? $_POST['memoTitle'] : '';
+        $memoTitle = isset($_POST['memoTitle']) ? $_POST['memoTitle'] : 'Untitled';
 
         // ログインしているか確認
         if (isset($_SESSION['user_id'])) {
             // データベースへの接続
             $db_host = "localhost";
-            $db_user = "q6l";
+            $db_user = "memo";
             $db_password = "";
-            $db_name = "SugoiMemo";
+            $db_name = "memo";
             $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
             if (!$connection) {
                 die("データベースに接続できません: " . mysqli_connect_error());
             }
 
-            // ユーザーID、メモタイトル、メモ本文、文字数をデータベースに保存
+            // ユーザーID取得
             $userId = $_SESSION['user_id'];
-            $query = "INSERT INTO memos (user_id, memo_title, memo_text, character_count) VALUES ('$userId', '$memoTitle', '$memoText', '$characterCount')";
-            $result = mysqli_query($connection, $query);
-            if ($result) {
-                echo "メモが保存されました";
 
-                // .txt ファイルとしても保存
-                $fileName = "memos/memo_" . $userId . "_" . time() . ".txt";
-                file_put_contents($fileName, $memoText);
-                echo "メモがテキストファイルとしても保存されました";
+            // 既存のメモを取得するか確認
+            if (isset($_POST['memoTitleSelect']) && !empty($_POST['memoTitleSelect'])) {
+                $selectedTitle = $_POST['memoTitleSelect'];
+
+                // 既存のメモを上書き
+                $query = "UPDATE memos SET memo_text = ?, character_count = ? WHERE user_id = ? AND memo_title = ?";
+                $stmt = mysqli_prepare($connection, $query);
+                mysqli_stmt_bind_param($stmt, "sisi", $memoText, $characterCount, $userId, $selectedTitle);
+
+                if (mysqli_stmt_execute($stmt)) {
+                    echo "メモが更新されました";
+                } else {
+                    echo "メモの更新に失敗しました: " . mysqli_error($connection);
+                }
             } else {
-                echo "メモの保存に失敗しました";
+                // 新しいメモを追加
+                $query = "INSERT INTO memos (user_id, memo_text, character_count, memo_title) VALUES (?, ?, ?, ?)";
+                $stmt = mysqli_prepare($connection, $query);
+                mysqli_stmt_bind_param($stmt, "issi", $userId, $memoText, $characterCount, $memoTitle);
+
+                if (mysqli_stmt_execute($stmt)) {
+                    echo "メモが保存されました";
+                } else {
+                    echo "メモの保存に失敗しました: " . mysqli_error($connection);
+                }
             }
+
             mysqli_close($connection);
         } else {
             echo "ログインしていません";
         }
     } else {
-        echo "";
+        echo "メモが空です";
     }
 } else {
     echo "";
 }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -84,19 +99,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <main>
         <div>
-            <!-- メモの選択フォーム -->
-            <form method="post" action="memo.php">
+            <!-- メモ読み込みフォーム -->
+            <form id="loadMemoForm">
                 <label for="memoTitleSelect">タイトルを選択：</label>
-                <select id="memoTitleSelect" name="memoTitleSelect" onchange="loadMemo(this)">
-                    <option value="">選択してください</option>
+                <select id="memoTitleSelect" name="memoTitleSelect">
                     <?php
                     // ログインしているか確認
                     if (isset($_SESSION['user_id'])) {
                         // データベースへの接続
                         $db_host = "localhost";
-                        $db_user = "q6l";
+                        $db_user = "memo";
                         $db_password = "";
-                        $db_name = "SugoiMemo";
+                        $db_name = "memo";
                         $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
                         if ($connection) {
@@ -115,12 +129,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     }
                     ?>
                 </select>
-                <button type="button" onclick="loadMemo(document.getElementById('memoTitleSelect'))">読み込む</button>
+                <button type="button" onclick="loadMemo()">読み込む</button>
             </form>
         </div>
         <div>
             <!-- メモ入力フォーム -->
-            <form method="post" action="memo.php">
+            <form id="saveMemoForm">
                 <label for="memoTitle">タイトル：</label>
                 <input type="text" id="memoTitle" name="memoTitle" placeholder="メモのタイトル">
             </form>
@@ -139,7 +153,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <footer>
         <p>&copy; 2023 スゴイメモ</p>
     </footer>
+
+    <script>
+
+    </script>
     <script src="script/memo.js"></script>
-    <script src="script/script.js"></script>
 </body>
 </html>

@@ -3,9 +3,9 @@ session_start();
 
 // データベースへの接続
 $db_host = "localhost";
-$db_user = "q6l";
+$db_user = "memo";
 $db_password = ""; 
-$db_name = "SugoiMemo";
+$db_name = "memo";
 $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
 if (!$connection) {
