@@ -3,9 +3,9 @@ session_start();
 
 // データベースへの接続
 $db_host = "localhost";
-$db_user = "memo";
+$db_user = "q6l";
 $db_password = ""; 
-$db_name = "memo";
+$db_name = "SugoiMemo";
 $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
 if (!$connection) {
@@ -82,8 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form">
             <form class="register-form" method="post" action="register.php">
                 <input type="text" name="name" placeholder="名前" required/>
-                <input type="password" name="password" placeholder="パスワード" required/>
                 <input type="text" name="email" placeholder="メールアドレス" required/>
+                <input type="password" name="password" placeholder="パスワード" required/>
                 <button type="submit">作成</button>
                 <p class="message">登録済みですか？ <a href="login.php">サインイン</a></p>
             </form>

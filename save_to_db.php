@@ -8,9 +8,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["memoText"])) {
     if (isset($_SESSION['user_id'])) {
         // データベースへの接続
         $db_host = "localhost";
-        $db_user = "memo";
+        $db_user = "q6l";
         $db_password = "";
-        $db_name = "memo";
+        $db_name = "SugoiMemo";
         $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
         if (!$connection) {
