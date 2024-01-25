@@ -11,6 +11,7 @@ function saveMemo() {
 }
 
 function saveToDatabase() {
+    var memoTitle = document.getElementById("memoTitle").value;
     var memoText = document.getElementById("memoInput").value;
 
     // Ajaxリクエストを使用してサーバーにデータを送信
@@ -22,7 +23,14 @@ function saveToDatabase() {
             console.log(xhr.responseText);
         }
     };
-    xhr.send("memoText=" + encodeURIComponent(memoText));
+
+    // メモのタイトルが空でない場合、memoTitleパラメータを送信する
+    var data = "memoText=" + encodeURIComponent(memoText);
+    if (memoTitle.trim() !== "") {
+        data += "&memoTitle=" + encodeURIComponent(memoTitle);
+    }
+
+    xhr.send(data);
 }
 
 function countCharacters(textarea) {
@@ -58,4 +66,22 @@ function resetRecognition() {
         recognition.stop();
         recognition = null;
     }
+}
+
+function loadMemo(selectElement) {
+    var selectedTitle = selectElement.value;
+
+    // Ajaxリクエストを使用してサーバーからデータを取得
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "load_memo.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            console.log(xhr.responseText);
+            // メモが取得されたら、表示などの処理を追加
+        }
+    };
+
+    // 選択されたタイトルをサーバーに送信
+    xhr.send("selectedTitle=" + encodeURIComponent(selectedTitle));
 }
