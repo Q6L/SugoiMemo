@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['memoText']) && !empty($_POST['memoText'])) {
 
@@ -38,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             echo "ログインしていません";
         }
     } else {
-        echo "メモのテキストがありません";
+        echo "";
     }
 } else {
     echo "";

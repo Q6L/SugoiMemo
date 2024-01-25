@@ -1,7 +1,6 @@
 <header>
         <h1>スゴイメモ +α</h1>
         <?php
-        session_start();
 
         if (isset($_SESSION['user_name'])) {
             echo '<span class="login-status">' . $_SESSION['user_name'] . '</span>';
