@@ -1,27 +1,34 @@
 <?php
+// 外部の設定ファイルからデータベース接続情報を読み込むなどの対策が必要です
 
 session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // ログインしていない場合はログインページにリダイレクト
+    header("Location: login.php");
+    exit();
+}
+
+// データベースへの接続
+$db_host = "localhost";
+$db_user = "q6l";
+$db_password = "";
+$db_name = "SugoiMemo";
+$connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
+
+if (!$connection) {
+    die("データベースに接続できません: " . mysqli_connect_error());
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['memoText']) && !empty($_POST['memoText'])) {
 
         $memoText = $_POST['memoText'];
         $characterCount = mb_strlen($memoText);
-        $memoTitle = isset($_POST['memoTitle']) ? $_POST['memoTitle'] : '';
+        $memoTitle = isset($_POST['memoTitle']) ? mysqli_real_escape_string($connection, $_POST['memoTitle']) : '';
 
         // ログインしているか確認
         if (isset($_SESSION['user_id'])) {
-            // データベースへの接続
-            $db_host = "localhost";
-            $db_user = "q6l";
-            $db_password = "";
-            $db_name = "SugoiMemo";
-            $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
-
-            if (!$connection) {
-                die("データベースに接続できません: " . mysqli_connect_error());
-            }
-
             // ユーザーID、メモタイトル、メモ本文、文字数をデータベースに保存
             $userId = $_SESSION['user_id'];
             $query = "INSERT INTO memos (user_id, memo_title, memo_text, character_count) VALUES ('$userId', '$memoTitle', '$memoText', '$characterCount')";
@@ -36,7 +43,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             } else {
                 echo "メモの保存に失敗しました";
             }
-            mysqli_close($connection);
         } else {
             echo "ログインしていません";
         }
@@ -46,7 +52,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 } else {
     echo "";
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="ja">

@@ -3,6 +3,7 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["memoText"])) {
     $memoText = $_POST["memoText"];
+    $memoTitle = $_POST["memoTitle"];
 
     // ログインしているか確認
     if (isset($_SESSION['user_id'])) {
@@ -19,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["memoText"])) {
 
         // ユーザーIDとメモをデータベースに保存
         $userId = $_SESSION['user_id'];
-        $query = "INSERT INTO memos (user_id, memo_text) VALUES ('$userId', '$memoText')";
+        $query = "INSERT INTO memos (user_id, memo_title, memo_text) VALUES ('$userId', '$memoTitle', '$memoText')";
         $result = mysqli_query($connection, $query);
 
         if ($result) {

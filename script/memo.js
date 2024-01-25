@@ -27,6 +27,7 @@ function saveToDatabase() {
     // メモのタイトルが空でない場合、memoTitleパラメータを送信する
     var data = "memoText=" + encodeURIComponent(memoText);
     if (memoTitle.trim() !== "") {
+        // memoTitleが空でない場合、memoTitleパラメータを追加
         data += "&memoTitle=" + encodeURIComponent(memoTitle);
     }
 
