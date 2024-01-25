@@ -10,6 +10,31 @@ function saveMemo() {
     a.click();
 }
 
+// memo.js
+
+function loadMemo(selectElement) {
+    var selectedTitle = selectElement.value;
+
+    // Ajaxリクエストを使用してサーバーからデータを取得
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "load_memo.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var memoText = xhr.responseText;
+
+            // 取得したメモデータを表示
+            document.getElementById("memoTitle").value = selectedTitle; // タイトルは選択されたタイトル
+            document.getElementById("memoInput").value = memoText;
+            countCharacters(document.getElementById("memoInput"));
+        }
+    };
+
+    // 選択されたタイトルをサーバーに送信
+    xhr.send("selectedTitle=" + encodeURIComponent(selectedTitle));
+}
+
+
 function saveToDatabase() {
     var memoTitle = document.getElementById("memoTitle").value;
     var memoText = document.getElementById("memoInput").value;
@@ -27,7 +52,6 @@ function saveToDatabase() {
     // メモのタイトルが空でない場合、memoTitleパラメータを送信する
     var data = "memoText=" + encodeURIComponent(memoText);
     if (memoTitle.trim() !== "") {
-        // memoTitleが空でない場合、memoTitleパラメータを追加
         data += "&memoTitle=" + encodeURIComponent(memoTitle);
     }
 
@@ -67,22 +91,4 @@ function resetRecognition() {
         recognition.stop();
         recognition = null;
     }
-}
-
-function loadMemo(selectElement) {
-    var selectedTitle = selectElement.value;
-
-    // Ajaxリクエストを使用してサーバーからデータを取得
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "load_memo.php", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            console.log(xhr.responseText);
-            // メモが取得されたら、表示などの処理を追加
-        }
-    };
-
-    // 選択されたタイトルをサーバーに送信
-    xhr.send("selectedTitle=" + encodeURIComponent(selectedTitle));
 }
