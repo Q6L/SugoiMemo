@@ -131,7 +131,6 @@ function playAlarm() {
   if (!isAlarmPlaying) {
     isAlarmPlaying = true;
     alarmIntervalId = setInterval(() => {
-      // アラーム音の再生処理を実装する（ここでは省略）
       console.log('アラーム音を再生中...');
     }, 1000);
   }
@@ -141,7 +140,6 @@ function stopAlarm() {
   if (isAlarmPlaying) {
     isAlarmPlaying = false;
     clearInterval(alarmIntervalId);
-    // アラーム音の停止処理を実装する（ここでは省略）
     console.log('アラーム音を停止しました。');
     alarmStopButton.style.display = 'none';
   }
