@@ -119,10 +119,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="line"></div>
             <p id="characterCount">0文字</p>
         </div>
-        <button onclick="saveMemo()">.txtとして保存</button>
-        <button onclick="saveToDatabase()">データベースに保存</button>
         <button onclick="startRecognition()">音声入力を開始</button>
         <button onclick="resetRecognition()">音声入力を終了</button>
+        <button onclick="saveMemo()">.txtとして保存</button>
+        <button onclick="saveToDatabase()">データベースに保存</button>
+        <button onclick="deleteMemo()">データベースから削除</button>
     </main>
 
     <footer>

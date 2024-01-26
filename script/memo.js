@@ -92,3 +92,32 @@ function resetRecognition() {
         recognition = null;
     }
 }
+
+function deleteMemo() {
+    var selectedTitle = document.getElementById("memoTitleSelect").value;
+
+    if (selectedTitle !== "") {
+        // 確認ダイアログを表示
+        var confirmDelete = confirm("選択されたメモを削除します。よろしいですか？");
+
+        if (confirmDelete) {
+            // Ajaxリクエストを作成
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "delete_memo.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            // レスポンスの処理
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // 削除が成功した場合の処理
+                    alert(xhr.responseText); // レスポンスを表示するか、他の処理を追加することができます
+                }
+            };
+
+            // リクエストを送信
+            xhr.send("memoTitle=" + selectedTitle);
+        }
+    } else {
+        alert("メモを選択してください");
+    }
+}
