@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// データベースへの接続
 $db_host = "localhost";
 $db_user = "q6l";
 $db_password = ""; 
@@ -17,10 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = mysqli_real_escape_string($connection, $_POST["password"]);
     $email = mysqli_real_escape_string($connection, $_POST["email"]);
 
-    // パスワードをハッシュ化
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // ユーザの重複を確認
     $checkQuery = "SELECT * FROM users WHERE email='$email'";
     $checkResult = mysqli_query($connection, $checkQuery);
 
@@ -28,7 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mysqli_num_rows($checkResult) > 0) {
             echo "このメールアドレスは既に使用されています。";
         } else {
-            // ユーザをデータベースに挿入
             $insertQuery = "INSERT INTO users (user_name, password, email) VALUES ('$userName', '$hashedPassword', '$email')";
             $insertResult = mysqli_query($connection, $insertQuery);
 

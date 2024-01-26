@@ -1,40 +1,36 @@
 <?php
 session_start();
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["memoText"])) {
-    $memoText = $_POST["memoText"];
-    $memoTitle = $_POST["memoTitle"];
+if (isset($_SESSION['user_id'])) {
+    $db_host = "localhost";
+    $db_user = "q6l";
+    $db_password = "";
+    $db_name = "SugoiMemo";
+    $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
-    // ログインしているか確認
-    if (isset($_SESSION['user_id'])) {
-        // データベースへの接続
-        $db_host = "localhost";
-        $db_user = "q6l";
-        $db_password = "";
-        $db_name = "SugoiMemo";
-        $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
-
-        if (!$connection) {
-            die("データベースに接続できません: " . mysqli_connect_error());
-        }
-
-        // ユーザーIDとメモをデータベースに保存
+    if ($connection) {
         $userId = $_SESSION['user_id'];
-        $query = "INSERT INTO memos (user_id, memo_title, memo_text) VALUES ('$userId', '$memoTitle', '$memoText')";
-        $result = mysqli_query($connection, $query);
+        $memoTitle = mysqli_real_escape_string($connection, $_POST['memoTitle']);
+        $memoText = mysqli_real_escape_string($connection, $_POST['memoText']);
 
-        if ($result) {
-            echo "メモがデータベースに保存されました";
+        $checkQuery = "SELECT COUNT(*) FROM memos WHERE user_id = '$userId' AND memo_title = '$memoTitle'";
+        $checkResult = mysqli_query($connection, $checkQuery);
+        $count = mysqli_fetch_assoc($checkResult)['COUNT(*)'];
+
+        if ($count > 0) {
+            echo "TitleDuplicateError";
         } else {
-            echo "メモのデータベース保存に失敗しました";
+            $insertQuery = "INSERT INTO memos (user_id, memo_title, memo_text) VALUES ('$userId', '$memoTitle', '$memoText')";
+            $insertResult = mysqli_query($connection, $insertQuery);
+
+            if ($insertResult) {
+                echo "Success";
+            } else {
+                echo "Error";
+            }
         }
 
-        // データベース接続のクローズ
         mysqli_close($connection);
-    } else {
-        echo "ログインしていません";
     }
-} else {
-    echo "不正なリクエストです";
 }
 ?>

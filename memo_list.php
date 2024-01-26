@@ -2,12 +2,10 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    // ログインしていない場合はログインページにリダイレクト
     header("Location: login.php");
     exit();
 }
 
-// データベースへの接続
 $db_host = "localhost";
 $db_user = "q6l";
 $db_password = "";
@@ -18,10 +16,8 @@ if (!$connection) {
     die("データベースに接続できません: " . mysqli_connect_error());
 }
 
-// ユーザーIDを取得
 $userId = $_SESSION['user_id'];
 
-// ユーザーが保存したメモ一覧を取得
 $query = "SELECT * FROM memos WHERE user_id = '$userId'";
 $result = mysqli_query($connection, $query);
 
@@ -75,10 +71,7 @@ if (!$result) {
     </footer>
 
     <?php
-    // 結果セットを解放
     mysqli_free_result($result);
-
-    // データベース接続のクローズ
     mysqli_close($connection);
     ?>
 </body>

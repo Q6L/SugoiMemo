@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// データベースへの接続
 $db_host = "localhost";
 $db_user = "q6l";
 $db_password = ""; 
@@ -22,12 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
 
-        // パスワードの照合
         if (password_verify($password, $row['password'])) {
-            // ログイン成功
             $_SESSION['user_id'] = $row['user_id'];
             $_SESSION['user_name'] = $row['user_name'];
-            header("Location: index.php"); // ログイン後のページにリダイレクト
+            header("Location: index.php");
             exit();
         } else {
             echo "パスワードが正しくありません。";

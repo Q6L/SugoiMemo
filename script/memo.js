@@ -39,24 +39,40 @@ function saveToDatabase() {
     var memoTitle = document.getElementById("memoTitle").value;
     var memoText = document.getElementById("memoInput").value;
 
+    // タイトルが空の場合、メッセージを表示して終了
+    if (memoTitle.trim() === "") {
+        alert("タイトルを入力してください");
+        return;
+    }
+
     // Ajaxリクエストを使用してサーバーにデータを送信
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "save_to_db.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            console.log(xhr.responseText);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                // レスポンスが成功の場合
+                console.log(xhr.responseText);
+                if (xhr.responseText === "TitleDuplicateError") {
+                    // タイトルが重複する場合のエラー処理
+                    alert("エラー: 同じタイトルのメモが既に存在します");
+                } else {
+                    // タイトルが重複しない場合の処理
+                    alert("メモが保存されました");
+                }
+            } else {
+                // 通信エラーの場合のエラー処理
+                alert("通信エラーが発生しました");
+            }
         }
     };
 
-    // メモのタイトルが空でない場合、memoTitleパラメータを送信する
-    var data = "memoText=" + encodeURIComponent(memoText);
-    if (memoTitle.trim() !== "") {
-        data += "&memoTitle=" + encodeURIComponent(memoTitle);
-    }
-
+    // メモのタイトルと本文を送信
+    var data = "memoText=" + encodeURIComponent(memoText) + "&memoTitle=" + encodeURIComponent(memoTitle);
     xhr.send(data);
 }
+
 
 function countCharacters(textarea) {
     const characterCountElement = document.getElementById("characterCount");

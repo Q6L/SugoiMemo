@@ -1,14 +1,11 @@
-
 <?php
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['selectedTitle']) && !empty($_POST['selectedTitle'])) {
-        // ユーザーIDと選択されたタイトルを使用してデータベースからメモを取得
         $userId = $_SESSION['user_id'];
         $selectedTitle = $_POST['selectedTitle'];
 
-        // データベースへの接続
         $db_host = "localhost";
         $db_user = "q6l";
         $db_password = "";
@@ -74,15 +71,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <main>
         <div>
-            <!-- メモの選択フォーム -->
             <form method="post" action="memo.php">
                 <label for="memoTitleSelect">タイトルを選択：</label>
                 <select id="memoTitleSelect" name="memoTitleSelect" onchange="loadMemo(this)">
                     <option value="">選択してください</option>
                     <?php
-                    // ログインしているか確認
                     if (isset($_SESSION['user_id'])) {
-                        // データベースへの接続
                         $db_host = "localhost";
                         $db_user = "q6l";
                         $db_password = "";
@@ -90,12 +84,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
                         if ($connection) {
-                            // ユーザーIDに基づいてメモのタイトルを取得
                             $userId = $_SESSION['user_id'];
                             $query = "SELECT memo_title FROM memos WHERE user_id = '$userId'";
                             $result = mysqli_query($connection, $query);
 
-                            // 取得したメモのタイトルをドロップダウンに追加
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<option value='" . $row['memo_title'] . "'>" . $row['memo_title'] . "</option>";
                             }
@@ -108,7 +100,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </form>
         </div>
         <div>
-            <!-- メモ入力フォーム -->
             <form method="post" action="memo.php">
                 <label for="memoTitle">タイトル：</label>
                 <input type="text" id="memoTitle" name="memoTitle" placeholder="メモのタイトル">

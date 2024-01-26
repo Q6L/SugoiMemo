@@ -3,11 +3,9 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['selectedTitle']) && !empty($_POST['selectedTitle'])) {
-        // ユーザーIDと選択されたタイトルを使用してデータベースからメモを取得
         $userId = $_SESSION['user_id'];
         $selectedTitle = $_POST['selectedTitle'];
 
-        // データベースへの接続
         $db_host = "localhost";
         $db_user = "q6l";
         $db_password = "";

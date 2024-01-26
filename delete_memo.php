@@ -2,7 +2,6 @@
 session_start();
 
 if (isset($_SESSION['user_id'])) {
-    // データベースへの接続
     $db_host = "localhost";
     $db_user = "q6l";
     $db_password = "";
@@ -12,8 +11,6 @@ if (isset($_SESSION['user_id'])) {
     if ($connection) {
         $userId = $_SESSION['user_id'];
         $memoTitle = mysqli_real_escape_string($connection, $_POST['memoTitle']);
-
-        // メモを削除するクエリを実行
         $query = "DELETE FROM memos WHERE user_id = '$userId' AND memo_title = '$memoTitle'";
         $result = mysqli_query($connection, $query);
 
