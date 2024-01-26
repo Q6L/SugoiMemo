@@ -1,58 +1,43 @@
-<?php
-// 外部の設定ファイルからデータベース接続情報を読み込むなどの対策が必要です
 
+<?php
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
-    // ログインしていない場合はログインページにリダイレクト
-    header("Location: login.php");
-    exit();
-}
-
-// データベースへの接続
-$db_host = "localhost";
-$db_user = "q6l";
-$db_password = "";
-$db_name = "SugoiMemo";
-$connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
-
-if (!$connection) {
-    die("データベースに接続できません: " . mysqli_connect_error());
-}
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (isset($_POST['memoText']) && !empty($_POST['memoText'])) {
+    if (isset($_POST['selectedTitle']) && !empty($_POST['selectedTitle'])) {
+        // ユーザーIDと選択されたタイトルを使用してデータベースからメモを取得
+        $userId = $_SESSION['user_id'];
+        $selectedTitle = $_POST['selectedTitle'];
 
-        $memoText = $_POST['memoText'];
-        $characterCount = mb_strlen($memoText);
-        $memoTitle = isset($_POST['memoTitle']) ? mysqli_real_escape_string($connection, $_POST['memoTitle']) : '';
+        // データベースへの接続
+        $db_host = "localhost";
+        $db_user = "q6l";
+        $db_password = "";
+        $db_name = "SugoiMemo";
+        $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
-        // ログインしているか確認
-        if (isset($_SESSION['user_id'])) {
-            // ユーザーID、メモタイトル、メモ本文、文字数をデータベースに保存
-            $userId = $_SESSION['user_id'];
-            $query = "INSERT INTO memos (user_id, memo_title, memo_text, character_count) VALUES ('$userId', '$memoTitle', '$memoText', '$characterCount')";
+        if ($connection) {
+            $query = "SELECT memo_text FROM memos WHERE user_id = '$userId' AND memo_title = '$selectedTitle'";
             $result = mysqli_query($connection, $query);
-            if ($result) {
-                echo "メモが保存されました";
 
-                // .txt ファイルとしても保存
-                $fileName = "memos/memo_" . $userId . "_" . time() . ".txt";
-                file_put_contents($fileName, $memoText);
-                echo "メモがテキストファイルとしても保存されました";
+            if ($result) {
+                $row = mysqli_fetch_assoc($result);
+                echo $row['memo_text'];
             } else {
-                echo "メモの保存に失敗しました";
+                echo "メモの読み込みに失敗しました: " . mysqli_error($connection);
             }
+
+            mysqli_close($connection);
         } else {
-            echo "ログインしていません";
+            echo "データベースに接続できません: " . mysqli_connect_error();
         }
     } else {
-        echo "";
+        echo "選択されたタイトルがありません";
     }
 } else {
     echo "";
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -120,7 +105,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     }
                     ?>
                 </select>
-                <button type="button" onclick="loadMemo(document.getElementById('memoTitleSelect'))">読み込む</button>
             </form>
         </div>
         <div>
