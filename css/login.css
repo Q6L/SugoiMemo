@@ -87,7 +87,7 @@
   color: #EF3B3A;
 }
 body {
-  background: #76b852; /* fallback for old browsers */
+  background: #76b852;
   background: rgb(141,194,111);
   background: linear-gradient(90deg, #DDD 0%, #DDD 50%);
   font-family: "Roboto", sans-serif;

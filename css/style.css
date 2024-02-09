@@ -28,7 +28,7 @@ main h1 {
 
 nav {
     display: block;
-    width: 220px; /*下の線の長さ*/
+    width: 220px;
     position: fixed;
     background-color: #ffffff;
     top: 0;
@@ -68,8 +68,8 @@ nav .inner ul li a {
     padding: 1rem;
     transition-duration: 0.2;
     position: relative;
-    top: 10px; /*リンクテキスト上下の位置*/
-    border-bottom: 1px solid #333; /*リンクテキストの下線*/
+    top: 10px;
+    border-bottom: 1px solid #333;
 }
 
 nav .inner ul li a:hover {
@@ -153,6 +153,6 @@ header {
 
 .login-link {
     position: absolute;
-    top: 30px; /* 上端からの距離を調整 */
-    right: 40px; /* 右端からの距離を調整 */
+    top: 30px;
+    right: 40px;
 }
